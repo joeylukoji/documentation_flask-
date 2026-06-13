@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flask — Gestion des utilisateurs — Documentation Web & Flask</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">{ }</span>
+      <span class="brand-text"><strong>DOCS</strong><small>Web & Flask</small></span>
+    </a>
+  </div>
+  <p class="nav-label">Guides</p>
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-badge">Start</span>
+      <span class="nav-item-text">
+        <strong>Accueil</strong>
+        <small>Vue d'ensemble</small>
+      </span>
+    </a>
+    <a href="guide-web.html" class="nav-item">
+      <span class="nav-badge">11 étapes</span>
+      <span class="nav-item-text">
+        <strong>Guide Flask</strong>
+        <small>Modèle, CRUD, formulaires</small>
+      </span>
+    </a>
+    <a href="flask.html" class="nav-item active">
+      <span class="nav-badge">Détail</span>
+      <span class="nav-item-text">
+        <strong>Flask & CRUD</strong>
+        <small>Templates complets</small>
+      </span>
+    </a></nav>
+  <div class="sidebar-footer"><p>HTML · Flask · SQLite</p></div>
+</aside>
+    <div class="main">
+      <header class="topbar">
+        <span class="topbar-badge">Détail</span>
+        <h1 class="topbar-title">Flask — Gestion des utilisateurs</h1>
+      </header>
+      <article class="doc-content">
+        <h1 class="page-hidden" id="documentation-flask--gestion-des-utilisateurs">Documentation Flask — Gestion des utilisateurs</h1>
+<p>Guide complet pour créer une application Flask avec page de connexion, CRUD utilisateurs et formulaires HTML (sans CSS).</p>
+<hr>
+<h2 id="table-des-matières">Table des matières</h2>
+<ol>
+<li><a href="#1-introduction">Introduction</a></li>
+<li><a href="#2-installation">Installation</a></li>
+<li><a href="#3-structure-du-projet">Structure du projet</a></li>
+<li><a href="#4-application-de-base">Application de base</a></li>
+<li><a href="#5-page-de-connexion">Page de connexion</a></li>
+<li><a href="#6-sessions-et-protection-des-routes">Sessions et protection des routes</a></li>
+<li><a href="#7-crud-utilisateurs">CRUD utilisateurs</a></li>
+<li><a href="#8-op%C3%A9rations-de-formulaire">Opérations de formulaire</a></li>
+<li><a href="#9-messages-flash">Messages flash</a></li>
+<li><a href="#10-exemple-complet">Exemple complet</a></li>
+</ol>
+<hr>
+<h2 id="1-introduction">1. Introduction</h2>
+<p><strong>Flask</strong> est un micro-framework Python pour créer des applications web. Il est léger, flexible et idéal pour apprendre le développement web.</p>
+<p>Concepts clés :</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Route</strong></td>
+<td>URL associée à une fonction Python</td>
+</tr>
+<tr>
+<td><strong>Template</strong></td>
+<td>Fichier HTML généré dynamiquement (Jinja2)</td>
+</tr>
+<tr>
+<td><strong>Request</strong></td>
+<td>Données envoyées par le navigateur (GET, POST…)</td>
+</tr>
+<tr>
+<td><strong>Session</strong></td>
+<td>Données stockées côté serveur pour un utilisateur connecté</td>
+</tr>
+<tr>
+<td><strong>CRUD</strong></td>
+<td>Create, Read, Update, Delete</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-installation">2. Installation</h2>
+<pre><code class="language-bash"># Créer un environnement virtuel
+python -m venv venv
+
+# Activer (Windows)
+venv\Scripts\activate
+
+# Activer (Linux/Mac)
+source venv/bin/activate
+
+# Installer Flask
+pip install flask
+</code></pre>
+<p>Créer un fichier <code>requirements.txt</code> :</p>
+<pre><code>flask==3.0.0
+</code></pre>
+<hr>
+<h2 id="3-structure-du-projet">3. Structure du projet</h2>
+<pre><code>mon_app/
+├── app.py                 # Point d&#39;entrée
+├── requirements.txt
+├── templates/             # Fichiers HTML
+│   ├── base.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── users/
+│   │   ├── list.html
+│   │   ├── create.html
+│   │   ├── edit.html
+│   │   └── show.html
+└── data/
+    └── users.json         # Stockage simple (exemple)
+</code></pre>
+<hr>
+<h2 id="4-application-de-base">4. Application de base</h2>
+<p>Fichier <code>app.py</code> minimal :</p>
+<pre><code class="language-python">from flask import Flask, render_template
+
+app = Flask(__name__)
+app.secret_key = &quot;changez-cette-cle-secrete-en-production&quot;
+
+@app.route(&quot;/&quot;)
+def index():
+    return render_template(&quot;dashboard.html&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(debug=True)
+</code></pre>
+<p>Lancer l&#39;application :</p>
+<pre><code class="language-bash">python app.py
+</code></pre>
+<p>Ouvrir : <code>http://127.0.0.1:5000</code></p>
+<hr>
+<h2 id="5-page-de-connexion">5. Page de connexion</h2>
+<h3 id="51-template-html-sans-css--templatesloginhtml">5.1 Template HTML (sans CSS) — `templates/login.html`</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Connexion&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Connexion&lt;/h1&gt;
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul&gt;
+                {% for category, message in messages %}
+                    &lt;li&gt;{{ message }}&lt;/li&gt;
+                {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form method=&quot;POST&quot; action=&quot;{{ url_for(&#39;login&#39;) }}&quot;&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;email&quot;&gt;Email :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;password&quot;&gt;Mot de passe :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;button type=&quot;submit&quot;&gt;Se connecter&lt;/button&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="52-route-de-connexion--dans-apppy">5.2 Route de connexion — dans `app.py`</h3>
+<pre><code class="language-python">from flask import Flask, render_template, request, redirect, url_for, session, flash
+
+app = Flask(__name__)
+app.secret_key = &quot;changez-cette-cle-secrete-en-production&quot;
+
+# Utilisateurs de démonstration (en production : base de données + hash)
+USERS = {
+    &quot;admin@example.com&quot;: {&quot;password&quot;: &quot;admin123&quot;, &quot;name&quot;: &quot;Administrateur&quot;},
+    &quot;user@example.com&quot;: {&quot;password&quot;: &quot;user123&quot;, &quot;name&quot;: &quot;Utilisateur&quot;},
+}
+
+@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def login():
+    if request.method == &quot;POST&quot;:
+        email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        password = request.form.get(&quot;password&quot;, &quot;&quot;)
+
+        user = USERS.get(email)
+        if user and user[&quot;password&quot;] == password:
+            session[&quot;user_email&quot;] = email
+            session[&quot;user_name&quot;] = user[&quot;name&quot;]
+            flash(&quot;Connexion réussie.&quot;, &quot;success&quot;)
+            return redirect(url_for(&quot;dashboard&quot;))
+
+        flash(&quot;Email ou mot de passe incorrect.&quot;, &quot;error&quot;)
+
+    return render_template(&quot;login.html&quot;)
+
+@app.route(&quot;/logout&quot;)
+def logout():
+    session.clear()
+    flash(&quot;Vous êtes déconnecté.&quot;, &quot;success&quot;)
+    return redirect(url_for(&quot;login&quot;))
+</code></pre>
+<h3 id="53-points-importants-du-formulaire-de-connexion">5.3 Points importants du formulaire de connexion</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>method=&quot;POST&quot;</code></td>
+<td>Envoie les données de façon sécurisée (pas dans l&#39;URL)</td>
+</tr>
+<tr>
+<td><code>name=&quot;email&quot;</code></td>
+<td>Clé utilisée avec <code>request.form.get(&quot;email&quot;)</code></td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td>Validation HTML côté navigateur</td>
+</tr>
+<tr>
+<td><code>session[...]</code></td>
+<td>Mémorise l&#39;utilisateur connecté</td>
+</tr>
+<tr>
+<td><code>redirect()</code></td>
+<td>Redirige après connexion réussie</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-sessions-et-protection-des-routes">6. Sessions et protection des routes</h2>
+<h3 id="61-décorateur-pour-protéger-les-pages">6.1 Décorateur pour protéger les pages</h3>
+<pre><code class="language-python">from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if &quot;user_email&quot; not in session:
+            flash(&quot;Veuillez vous connecter.&quot;, &quot;error&quot;)
+            return redirect(url_for(&quot;login&quot;))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route(&quot;/dashboard&quot;)
+@login_required
+def dashboard():
+    return render_template(&quot;dashboard.html&quot;, name=session.get(&quot;user_name&quot;))
+</code></pre>
+<h3 id="62-template-dashboard--templatesdashboardhtml">6.2 Template dashboard — `templates/dashboard.html`</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Tableau de bord&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Bienvenue, {{ name }} !&lt;/h1&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;list_users&#39;) }}&quot;&gt;Gérer les utilisateurs&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;logout&#39;) }}&quot;&gt;Déconnexion&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<hr>
+<h2 id="7-crud-utilisateurs">7. CRUD utilisateurs</h2>
+<p>Le CRUD couvre les 4 opérations essentielles :</p>
+<table>
+<thead>
+<tr>
+<th>Opération</th>
+<th>HTTP</th>
+<th>Route exemple</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Create</strong></td>
+<td>POST</td>
+<td><code>/users/create</code></td>
+<td>Ajouter un utilisateur</td>
+</tr>
+<tr>
+<td><strong>Read</strong></td>
+<td>GET</td>
+<td><code>/users</code> et <code>/users/&lt;id&gt;</code></td>
+<td>Lister / afficher</td>
+</tr>
+<tr>
+<td><strong>Update</strong></td>
+<td>POST</td>
+<td><code>/users/&lt;id&gt;/edit</code></td>
+<td>Modifier</td>
+</tr>
+<tr>
+<td><strong>Delete</strong></td>
+<td>POST</td>
+<td><code>/users/&lt;id&gt;/delete</code></td>
+<td>Supprimer</td>
+</tr>
+</tbody></table>
+<h3 id="71-modèle-et-base-de-données">7.1 Modèle et base de données</h3>
+<p>Avant le CRUD, il faut définir <strong>comment les données sont stockées</strong>. En production, on utilise une <strong>base de données</strong>, pas une simple liste Python.</p>
+<h4 id="liste-python-vs-base-de-données">Liste Python vs Base de données</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Liste <code>managed_users = []</code></th>
+<th>Base SQLite + modèle</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Données au redémarrage</td>
+<td>Perdues</td>
+<td>Conservées dans <code>app.db</code></td>
+</tr>
+<tr>
+<td>Structure</td>
+<td><code>{&quot;name&quot;: &quot;Alice&quot;}</code></td>
+<td>Colonnes : <code>id</code>, <code>name</code>, <code>email</code>…</td>
+</tr>
+<tr>
+<td>Recherche</td>
+<td>Boucle <code>for</code></td>
+<td><code>User.query.filter_by(...)</code></td>
+</tr>
+</tbody></table>
+<h4 id="quest-ce-quun-modèle-">Qu'est-ce qu'un modèle ?</h4>
+<p>Un <strong>modèle</strong> est une <strong>classe Python</strong> = une <strong>table SQL</strong>. Chaque attribut = une colonne. Chaque objet <code>User(...)</code> = une ligne.</p>
+<pre><code>class User              →  Table &quot;user&quot;
+    .id                 →  colonne id (clé primaire)
+    .name               →  colonne name
+    .email              →  colonne email
+    .role               →  colonne role
+    .password_hash      →  colonne password_hash
+</code></pre>
+<h4 id="installation">Installation</h4>
+<pre><code class="language-bash">pip install flask-sqlalchemy
+</code></pre>
+<h4 id="configuration--apppy">Configuration — `app.py`</h4>
+<pre><code class="language-python">from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///app.db&quot;
+app.config[&quot;SQLALCHEMY_TRACK_MODIFICATIONS&quot;] = False
+
+db = SQLAlchemy(app)
+</code></pre>
+<h4 id="modèle-user--modelspy">Modèle `User` — `models.py`</h4>
+<pre><code class="language-python">from app import db
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    role = db.Column(db.String(20), default=&quot;user&quot;)
+    password_hash = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return f&quot;&lt;User {self.email}&gt;&quot;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td><code>Integer, primary_key=True</code></td>
+<td>Identifiant unique auto-généré</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>String(100), nullable=False</code></td>
+<td>Nom obligatoire</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>String(120), unique=True</code></td>
+<td>Email unique (pas de doublon)</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>String(20)</code></td>
+<td>Rôle : <code>user</code>, <code>admin</code>, etc.</td>
+</tr>
+<tr>
+<td><code>password_hash</code></td>
+<td><code>String(200)</code></td>
+<td>Mot de passe hashé (jamais en clair)</td>
+</tr>
+</tbody></table>
+<h4 id="créer-la-table-en-base">Créer la table en base</h4>
+<pre><code class="language-python">with app.app_context():
+    db.create_all()
+</code></pre>
+<p>Exécuter une fois → crée le fichier <code>app.db</code> et la table <code>user</code>.</p>
+<h4 id="opérations-sur-le-modèle-sans-route-http">Opérations sur le modèle (sans route HTTP)</h4>
+<pre><code class="language-python">from werkzeug.security import generate_password_hash, check_password_hash
+
+# CREATE
+user = User(name=&quot;Alice&quot;, email=&quot;alice@example.com&quot;,
+            role=&quot;user&quot;, password_hash=generate_password_hash(&quot;secret&quot;))
+db.session.add(user)
+db.session.commit()
+
+# READ — tous
+users = User.query.all()
+
+# READ — un seul par id
+user = db.session.get(User, 1)
+
+# READ — par email
+user = User.query.filter_by(email=&quot;alice@example.com&quot;).first()
+
+# UPDATE
+user.name = &quot;Alice Martin&quot;
+db.session.commit()
+
+# DELETE
+db.session.delete(user)
+db.session.commit()
+</code></pre>
+<blockquote>
+<p><strong><code>commit()</code> est obligatoire</strong> après <code>add()</code>, modification ou <code>delete()</code> — sinon rien n&#39;est écrit en base.</p>
+</blockquote>
+<h4 id="templates-html-avec-un-modèle">Templates HTML avec un modèle</h4>
+<pre><code class="language-html">&lt;!-- Dictionnaire : {{ user[&quot;name&quot;] }} --&gt;
+&lt;!-- Modèle : --&gt;
+&lt;td&gt;{{ user.name }}&lt;/td&gt;
+&lt;td&gt;{{ user.email }}&lt;/td&gt;
+</code></pre>
+<h3 id="72-read--lister-les-utilisateurs">7.2 READ — Lister les utilisateurs</h3>
+<p><strong>Route :</strong></p>
+<pre><code class="language-python">@app.route(&quot;/users&quot;)
+@login_required
+def list_users():
+    users = User.query.all()
+    return render_template(&quot;users/list.html&quot;, users=users)
+</code></pre>
+<p><strong>Template <code>templates/users/list.html</code> :</strong></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Liste des utilisateurs&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Utilisateurs&lt;/h1&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;create_user&#39;) }}&quot;&gt;+ Nouvel utilisateur&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;dashboard&#39;) }}&quot;&gt;← Retour&lt;/a&gt;&lt;/p&gt;
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            &lt;ul&gt;{% for msg in messages %}&lt;li&gt;{{ msg }}&lt;/li&gt;{% endfor %}&lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;table border=&quot;1&quot; cellpadding=&quot;8&quot;&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;ID&lt;/th&gt;
+                &lt;th&gt;Nom&lt;/th&gt;
+                &lt;th&gt;Email&lt;/th&gt;
+                &lt;th&gt;Rôle&lt;/th&gt;
+                &lt;th&gt;Actions&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            {% for user in users %}
+            &lt;tr&gt;
+                &lt;td&gt;{{ user.id }}&lt;/td&gt;
+                &lt;td&gt;{{ user.name }}&lt;/td&gt;
+                &lt;td&gt;{{ user.email }}&lt;/td&gt;
+                &lt;td&gt;{{ user.role }}&lt;/td&gt;
+                &lt;td&gt;
+                    &lt;a href=&quot;{{ url_for(&#39;show_user&#39;, user_id=user.id) }}&quot;&gt;Voir&lt;/a&gt; |
+                    &lt;a href=&quot;{{ url_for(&#39;edit_user&#39;, user_id=user.id) }}&quot;&gt;Modifier&lt;/a&gt; |
+                    &lt;form method=&quot;POST&quot; action=&quot;{{ url_for(&#39;delete_user&#39;, user_id=user.id) }}&quot; style=&quot;display:inline&quot;&gt;
+                        &lt;button type=&quot;submit&quot; onclick=&quot;return confirm(&#39;Supprimer cet utilisateur ?&#39;)&quot;&gt;Supprimer&lt;/button&gt;
+                    &lt;/form&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            {% else %}
+            &lt;tr&gt;&lt;td colspan=&quot;5&quot;&gt;Aucun utilisateur.&lt;/td&gt;&lt;/tr&gt;
+            {% endfor %}
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="73-read--afficher-un-utilisateur">7.3 READ — Afficher un utilisateur</h3>
+<p><strong>Route :</strong></p>
+<pre><code class="language-python">@app.route(&quot;/users/&lt;int:user_id&gt;&quot;)
+@login_required
+def show_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash(&quot;Utilisateur introuvable.&quot;, &quot;error&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+    return render_template(&quot;users/show.html&quot;, user=user)
+</code></pre>
+<p><strong>Template <code>templates/users/show.html</code> :</strong></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;{{ user.name }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{{ user.name }}&lt;/h1&gt;
+    &lt;p&gt;&lt;strong&gt;Email :&lt;/strong&gt; {{ user.email }}&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Rôle :&lt;/strong&gt; {{ user.role }}&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;ID :&lt;/strong&gt; {{ user.id }}&lt;/p&gt;
+    &lt;p&gt;
+        &lt;a href=&quot;{{ url_for(&#39;edit_user&#39;, user_id=user.id) }}&quot;&gt;Modifier&lt;/a&gt; |
+        &lt;a href=&quot;{{ url_for(&#39;list_users&#39;) }}&quot;&gt;← Retour à la liste&lt;/a&gt;
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="74-create--créer-un-utilisateur">7.4 CREATE — Créer un utilisateur</h3>
+<p><strong>Route :</strong></p>
+<pre><code class="language-python">from werkzeug.security import generate_password_hash
+from models import User
+
+@app.route(&quot;/users/create&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+@login_required
+def create_user():
+    if request.method == &quot;POST&quot;:
+        name = request.form.get(&quot;name&quot;, &quot;&quot;).strip()
+        email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        role = request.form.get(&quot;role&quot;, &quot;user&quot;)
+        password = request.form.get(&quot;password&quot;, &quot;&quot;)
+
+        errors = []
+        if not name:
+            errors.append(&quot;Le nom est obligatoire.&quot;)
+        if not email:
+            errors.append(&quot;L&#39;email est obligatoire.&quot;)
+        if User.query.filter_by(email=email).first():
+            errors.append(&quot;Cet email existe déjà.&quot;)
+
+        if errors:
+            for error in errors:
+                flash(error, &quot;error&quot;)
+            return render_template(&quot;users/create.html&quot;, name=name, email=email, role=role)
+
+        user = User(
+            name=name,
+            email=email,
+            role=role,
+            password_hash=generate_password_hash(password or &quot;changeme&quot;),
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash(f&quot;Utilisateur « {name} » créé avec succès.&quot;, &quot;success&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    return render_template(&quot;users/create.html&quot;)
+</code></pre>
+<p><strong>Template <code>templates/users/create.html</code> :</strong></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Nouvel utilisateur&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Créer un utilisateur&lt;/h1&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;list_users&#39;) }}&quot;&gt;← Retour&lt;/a&gt;&lt;/p&gt;
+
+    &lt;form method=&quot;POST&quot; action=&quot;{{ url_for(&#39;create_user&#39;) }}&quot;&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;name&quot;&gt;Nom complet :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; value=&quot;{{ name or &#39;&#39; }}&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;email&quot;&gt;Email :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; value=&quot;{{ email or &#39;&#39; }}&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;role&quot;&gt;Rôle :&lt;/label&gt;&lt;br&gt;
+            &lt;select id=&quot;role&quot; name=&quot;role&quot;&gt;
+                &lt;option value=&quot;user&quot; {% if role == &#39;user&#39; %}selected{% endif %}&gt;Utilisateur&lt;/option&gt;
+                &lt;option value=&quot;admin&quot; {% if role == &#39;admin&#39; %}selected{% endif %}&gt;Administrateur&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;button type=&quot;submit&quot;&gt;Créer&lt;/button&gt;
+            &lt;button type=&quot;reset&quot;&gt;Réinitialiser&lt;/button&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="75-update--modifier-un-utilisateur">7.5 UPDATE — Modifier un utilisateur</h3>
+<p><strong>Route :</strong></p>
+<pre><code class="language-python">@app.route(&quot;/users/&lt;int:user_id&gt;/edit&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+@login_required
+def edit_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash(&quot;Utilisateur introuvable.&quot;, &quot;error&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    if request.method == &quot;POST&quot;:
+        name = request.form.get(&quot;name&quot;, &quot;&quot;).strip()
+        email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        role = request.form.get(&quot;role&quot;, &quot;user&quot;)
+
+        errors = []
+        if not name:
+            errors.append(&quot;Le nom est obligatoire.&quot;)
+        if not email:
+            errors.append(&quot;L&#39;email est obligatoire.&quot;)
+        existing = User.query.filter_by(email=email).first()
+        if existing and existing.id != user_id:
+            errors.append(&quot;Cet email est déjà utilisé.&quot;)
+
+        if errors:
+            for error in errors:
+                flash(error, &quot;error&quot;)
+            return render_template(&quot;users/edit.html&quot;, user=user)
+
+        user.name = name
+        user.email = email
+        user.role = role
+        db.session.commit()
+        flash(&quot;Utilisateur mis à jour.&quot;, &quot;success&quot;)
+        return redirect(url_for(&quot;show_user&quot;, user_id=user_id))
+
+    return render_template(&quot;users/edit.html&quot;, user=user)
+</code></pre>
+<p><strong>Template <code>templates/users/edit.html</code> :</strong></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Modifier {{ user.name }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Modifier l&#39;utilisateur&lt;/h1&gt;
+    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;show_user&#39;, user_id=user.id) }}&quot;&gt;← Retour&lt;/a&gt;&lt;/p&gt;
+
+    &lt;form method=&quot;POST&quot; action=&quot;{{ url_for(&#39;edit_user&#39;, user_id=user.id) }}&quot;&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;name&quot;&gt;Nom complet :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; value=&quot;{{ user.name }}&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;email&quot;&gt;Email :&lt;/label&gt;&lt;br&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; value=&quot;{{ user.email }}&quot; required&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label for=&quot;role&quot;&gt;Rôle :&lt;/label&gt;&lt;br&gt;
+            &lt;select id=&quot;role&quot; name=&quot;role&quot;&gt;
+                &lt;option value=&quot;user&quot; {% if user.role == &#39;user&#39; %}selected{% endif %}&gt;Utilisateur&lt;/option&gt;
+                &lt;option value=&quot;admin&quot; {% if user.role == &#39;admin&#39; %}selected{% endif %}&gt;Administrateur&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;button type=&quot;submit&quot;&gt;Enregistrer&lt;/button&gt;
+            &lt;a href=&quot;{{ url_for(&#39;list_users&#39;) }}&quot;&gt;Annuler&lt;/a&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h3 id="76-delete--supprimer-un-utilisateur">7.6 DELETE — Supprimer un utilisateur</h3>
+<p><strong>Route :</strong></p>
+<pre><code class="language-python">@app.route(&quot;/users/&lt;int:user_id&gt;/delete&quot;, methods=[&quot;POST&quot;])
+@login_required
+def delete_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash(&quot;Utilisateur introuvable.&quot;, &quot;error&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    name = user.name
+    db.session.delete(user)
+    db.session.commit()
+    flash(f&quot;Utilisateur « {name} » supprimé.&quot;, &quot;success&quot;)
+    return redirect(url_for(&quot;list_users&quot;))
+</code></pre>
+<blockquote>
+<p><strong>Note :</strong> La suppression utilise <code>POST</code> (et non <code>GET</code>) pour éviter qu&#39;un simple lien ne supprime des données par accident.</p>
+</blockquote>
+<hr>
+<h2 id="8-opérations-de-formulaire">8. Opérations de formulaire</h2>
+<h3 id="81-méthodes-http">8.1 Méthodes HTTP</h3>
+<pre><code class="language-python"># GET  → Afficher le formulaire (lecture)
+# POST → Traiter les données soumises (écriture)
+
+@app.route(&quot;/exemple&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def exemple():
+    if request.method == &quot;POST&quot;:
+        # Traitement du formulaire
+        valeur = request.form.get(&quot;champ&quot;)
+        return redirect(url_for(&quot;autre_page&quot;))
+    return render_template(&quot;exemple.html&quot;)
+</code></pre>
+<h3 id="82-récupérer-les-données-du-formulaire">8.2 Récupérer les données du formulaire</h3>
+<pre><code class="language-python"># Champ texte simple
+nom = request.form.get(&quot;name&quot;, &quot;&quot;).strip()
+
+# Case à cocher (présente seulement si cochée)
+actif = request.form.get(&quot;active&quot;) == &quot;on&quot;
+
+# Bouton radio
+genre = request.form.get(&quot;gender&quot;)  # &quot;homme&quot; ou &quot;femme&quot;
+
+# Liste déroulante
+role = request.form.get(&quot;role&quot;)
+
+# Zone de texte multiligne
+bio = request.form.get(&quot;bio&quot;, &quot;&quot;).strip()
+
+# Fichier uploadé (nécessite enctype=&quot;multipart/form-data&quot;)
+fichier = request.files.get(&quot;avatar&quot;)
+</code></pre>
+<h3 id="83-types-de-champs-html-courants">8.3 Types de champs HTML courants</h3>
+<pre><code class="language-html">&lt;!-- Texte --&gt;
+&lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;
+
+&lt;!-- Email --&gt;
+&lt;input type=&quot;email&quot; name=&quot;email&quot;&gt;
+
+&lt;!-- Mot de passe --&gt;
+&lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;
+
+&lt;!-- Nombre --&gt;
+&lt;input type=&quot;number&quot; name=&quot;age&quot; min=&quot;0&quot; max=&quot;120&quot;&gt;
+
+&lt;!-- Case à cocher --&gt;
+&lt;input type=&quot;checkbox&quot; name=&quot;newsletter&quot; value=&quot;yes&quot;&gt;
+
+&lt;!-- Boutons radio --&gt;
+&lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;homme&quot;&gt; Homme
+&lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;femme&quot;&gt; Femme
+
+&lt;!-- Liste déroulante --&gt;
+&lt;select name=&quot;country&quot;&gt;
+    &lt;option value=&quot;fr&quot;&gt;France&lt;/option&gt;
+    &lt;option value=&quot;be&quot;&gt;Belgique&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Zone de texte --&gt;
+&lt;textarea name=&quot;bio&quot; rows=&quot;4&quot; cols=&quot;40&quot;&gt;&lt;/textarea&gt;
+
+&lt;!-- Fichier --&gt;
+&lt;form method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;input type=&quot;file&quot; name=&quot;avatar&quot;&gt;
+&lt;/form&gt;
+
+&lt;!-- Champ caché --&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;user_id&quot; value=&quot;{{ user.id }}&quot;&gt;
+
+&lt;!-- Boutons --&gt;
+&lt;button type=&quot;submit&quot;&gt;Envoyer&lt;/button&gt;
+&lt;button type=&quot;reset&quot;&gt;Réinitialiser&lt;/button&gt;
+</code></pre>
+<h3 id="84-validation-côté-serveur">8.4 Validation côté serveur</h3>
+<p>Toujours valider côté serveur, même si <code>required</code> est présent en HTML :</p>
+<pre><code class="language-python">def validate_user_form(name, email, role):
+    errors = []
+
+    if not name or len(name) &lt; 2:
+        errors.append(&quot;Le nom doit contenir au moins 2 caractères.&quot;)
+
+    if not email or &quot;@&quot; not in email:
+        errors.append(&quot;Email invalide.&quot;)
+
+    if role not in (&quot;user&quot;, &quot;admin&quot;):
+        errors.append(&quot;Rôle invalide.&quot;)
+
+    return errors
+</code></pre>
+<h3 id="85-conserver-les-valeurs-en-cas-derreur">8.5 Conserver les valeurs en cas d'erreur</h3>
+<p>Si le formulaire est invalide, renvoyer les valeurs saisies pour ne pas frustrer l&#39;utilisateur :</p>
+<pre><code class="language-python">return render_template(&quot;create.html&quot;, name=name, email=email, role=role)
+</code></pre>
+<pre><code class="language-html">&lt;input type=&quot;text&quot; name=&quot;name&quot; value=&quot;{{ name or &#39;&#39; }}&quot;&gt;
+</code></pre>
+<hr>
+<h2 id="9-messages-flash">9. Messages flash</h2>
+<p>Les messages flash affichent des retours temporaires (succès, erreur) :</p>
+<pre><code class="language-python">flash(&quot;Opération réussie.&quot;, &quot;success&quot;)
+flash(&quot;Une erreur est survenue.&quot;, &quot;error&quot;)
+</code></pre>
+<p>Affichage dans le template :</p>
+<pre><code class="language-html">{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        &lt;ul&gt;
+            {% for category, message in messages %}
+                &lt;li&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+        &lt;/ul&gt;
+    {% endif %}
+{% endwith %}
+</code></pre>
+<hr>
+<h2 id="10-exemple-complet">10. Exemple complet</h2>
+<p>Voici l&#39;application Flask complète avec <strong>modèle de base de données</strong> :</p>
+<p><strong><code>app.py</code></strong></p>
+<pre><code class="language-python">from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.secret_key = &quot;changez-cette-cle-secrete-en-production&quot;
+app.config[&quot;SQLALCHEMY_DATABASE_URI&quot;] = &quot;sqlite:///app.db&quot;
+app.config[&quot;SQLALCHEMY_TRACK_MODIFICATIONS&quot;] = False
+
+db = SQLAlchemy(app)
+
+
+# --- Modèle (table user en base) ---
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    role = db.Column(db.String(20), default=&quot;user&quot;)
+    password_hash = db.Column(db.String(200), nullable=False)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if &quot;user_email&quot; not in session:
+            flash(&quot;Veuillez vous connecter.&quot;, &quot;error&quot;)
+            return redirect(url_for(&quot;login&quot;))
+        return f(*args, **kwargs)
+    return decorated
+
+
+# --- Auth ---
+@app.route(&quot;/&quot;)
+def index():
+    if &quot;user_email&quot; in session:
+        return redirect(url_for(&quot;dashboard&quot;))
+    return redirect(url_for(&quot;login&quot;))
+
+
+@app.route(&quot;/login&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def login():
+    if request.method == &quot;POST&quot;:
+        email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        password = request.form.get(&quot;password&quot;, &quot;&quot;)
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password_hash, password):
+            session[&quot;user_email&quot;] = email
+            session[&quot;user_name&quot;] = user.name
+            flash(&quot;Connexion réussie.&quot;, &quot;success&quot;)
+            return redirect(url_for(&quot;dashboard&quot;))
+        flash(&quot;Email ou mot de passe incorrect.&quot;, &quot;error&quot;)
+    return render_template(&quot;login.html&quot;)
+
+
+@app.route(&quot;/logout&quot;)
+def logout():
+    session.clear()
+    flash(&quot;Déconnexion effectuée.&quot;, &quot;success&quot;)
+    return redirect(url_for(&quot;login&quot;))
+
+
+@app.route(&quot;/dashboard&quot;)
+@login_required
+def dashboard():
+    return render_template(&quot;dashboard.html&quot;, name=session.get(&quot;user_name&quot;))
+
+
+# --- CRUD ---
+@app.route(&quot;/users&quot;)
+@login_required
+def list_users():
+    users = User.query.all()
+    return render_template(&quot;users/list.html&quot;, users=users)
+
+
+@app.route(&quot;/users/create&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+@login_required
+def create_user():
+    if request.method == &quot;POST&quot;:
+        name = request.form.get(&quot;name&quot;, &quot;&quot;).strip()
+        email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        role = request.form.get(&quot;role&quot;, &quot;user&quot;)
+        password = request.form.get(&quot;password&quot;, &quot;&quot;)
+
+        if not name or not email or not password:
+            flash(&quot;Tous les champs sont obligatoires.&quot;, &quot;error&quot;)
+            return render_template(&quot;users/create.html&quot;, name=name, email=email, role=role)
+
+        if User.query.filter_by(email=email).first():
+            flash(&quot;Cet email existe déjà.&quot;, &quot;error&quot;)
+            return render_template(&quot;users/create.html&quot;, name=name, email=email, role=role)
+
+        user = User(name=name, email=email, role=role,
+                    password_hash=generate_password_hash(password))
+        db.session.add(user)
+        db.session.commit()
+        flash(&quot;Utilisateur créé.&quot;, &quot;success&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    return render_template(&quot;users/create.html&quot;)
+
+
+@app.route(&quot;/users/&lt;int:user_id&gt;/edit&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+@login_required
+def edit_user(user_id):
+    user = db.session.get(User, user_id)
+    if not user:
+        flash(&quot;Utilisateur introuvable.&quot;, &quot;error&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    if request.method == &quot;POST&quot;:
+        user.name = request.form.get(&quot;name&quot;, &quot;&quot;).strip()
+        user.email = request.form.get(&quot;email&quot;, &quot;&quot;).strip()
+        user.role = request.form.get(&quot;role&quot;, &quot;user&quot;)
+        db.session.commit()
+        flash(&quot;Utilisateur mis à jour.&quot;, &quot;success&quot;)
+        return redirect(url_for(&quot;list_users&quot;))
+
+    return render_template(&quot;users/edit.html&quot;, user=user)
+
+
+@app.route(&quot;/users/&lt;int:user_id&gt;/delete&quot;, methods=[&quot;POST&quot;])
+@login_required
+def delete_user(user_id):
+    user = db.session.get(User, user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        flash(&quot;Utilisateur supprimé.&quot;, &quot;success&quot;)
+    return redirect(url_for(&quot;list_users&quot;))
+
+
+# --- Initialisation base de données ---
+with app.app_context():
+    db.create_all()
+    if not User.query.filter_by(email=&quot;admin@example.com&quot;).first():
+        admin = User(
+            name=&quot;Administrateur&quot;,
+            email=&quot;admin@example.com&quot;,
+            role=&quot;admin&quot;,
+            password_hash=generate_password_hash(&quot;admin123&quot;),
+        )
+        db.session.add(admin)
+        db.session.commit()
+
+
+if __name__ == &quot;__main__&quot;:
+    app.run(debug=True)
+</code></pre>
+<h3 id="lancer-le-projet">Lancer le projet</h3>
+<pre><code class="language-bash">pip install flask
+python app.py
+</code></pre>
+<p><strong>Identifiants de test :</strong></p>
+<ul>
+<li>Email : <code>admin@example.com</code></li>
+<li>Mot de passe : <code>admin123</code></li>
+</ul>
+<hr>
+<h2 id="schéma-des-routes">Schéma des routes</h2>
+<pre><code>GET  /                    → Redirection login ou dashboard
+GET  /login               → Formulaire de connexion
+POST /login               → Traitement connexion
+GET  /logout              → Déconnexion
+GET  /dashboard           → Tableau de bord (protégé)
+
+GET  /users               → Liste (Read)
+GET  /users/create        → Formulaire création (Create)
+POST /users/create        → Traitement création
+GET  /users/&lt;id&gt;          → Détail (Read)
+GET  /users/&lt;id&gt;/edit     → Formulaire modification (Update)
+POST /users/&lt;id&gt;/edit     → Traitement modification
+POST /users/&lt;id&gt;/delete   → Suppression (Delete)
+</code></pre>
+<hr>
+<h2 id="bonnes-pratiques">Bonnes pratiques</h2>
+<ol>
+<li><strong>Ne jamais stocker les mots de passe en clair</strong> — utiliser <code>werkzeug.security</code> (<code>generate_password_hash</code>, <code>check_password_hash</code>).</li>
+<li><strong>Toujours valider côté serveur</strong> — la validation HTML peut être contournée.</li>
+<li><strong>Utiliser POST pour les actions destructives</strong> (suppression, modification).</li>
+<li><strong>Changer <code>secret_key</code></strong> en production et ne jamais la committer.</li>
+<li><strong>Passer à une base de données</strong> (SQLite, PostgreSQL) pour un vrai projet — voir Flask-SQLAlchemy.</li>
+</ol>
+<hr>
+<h2 id="prochaines-étapes">Prochaines étapes</h2>
+<ul>
+<li><strong>Flask-SQLAlchemy</strong> : persistance en base de données</li>
+<li><strong>Flask-WTF</strong> : formulaires avec protection CSRF</li>
+<li><strong>Flask-Login</strong> : gestion avancée des sessions utilisateur</li>
+<li><strong>Werkzeug</strong> : hachage sécurisé des mots de passe</li>
+</ul>
+
+      </article>
+    </div>
+  </div>
+</body>
+</html>

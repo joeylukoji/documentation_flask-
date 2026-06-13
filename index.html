@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil — Documentation Web & Flask</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="brand">
+                    <span class="brand-icon">{ }</span>
+                    <span class="brand-text">
+                        <strong>DOCS</strong>
+                        <small>Web & Flask</small>
+                    </span>
+                </a>
+            </div>
+            <p class="nav-label">Guides</p>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active">
+                    <span class="nav-badge">Start</span>
+                    <span class="nav-item-text">
+                        <strong>Accueil</strong>
+                        <small>Vue d'ensemble</small>
+                    </span>
+                </a>
+                <a href="guide-web.html" class="nav-item">
+                    <span class="nav-badge">11 étapes</span>
+                    <span class="nav-item-text">
+                        <strong>Guide Flask</strong>
+                        <small>Modèle, CRUD, formulaires</small>
+                    </span>
+                </a>
+                <a href="flask.html" class="nav-item">
+                    <span class="nav-badge">Détail</span>
+                    <span class="nav-item-text">
+                        <strong>Flask & CRUD</strong>
+                        <small>Templates complets</small>
+                    </span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>HTML · Flask</p>
+            </div>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <span class="topbar-badge">Start</span>
+                <h1 class="topbar-title">Documentation — Développement Web & Flask</h1>
+            </header>
+
+            <article class="doc-content">
+                <p>Bienvenue ! Ce site contient deux guides pour apprendre à créer des applications web avec <strong>Flask</strong>.</p>
+
+                <h2>Guides disponibles</h2>
+
+                <div class="cards">
+                    <a href="guide-web.html" class="card">
+                        <span class="card-badge">11 étapes</span>
+                        <h2>Guide Flask</h2>
+                        <p>Modèle de base de données SQLite, connexion, CRUD utilisateurs et formulaires.</p>
+                    </a>
+                    <a href="flask.html" class="card">
+                        <span class="card-badge">Détail</span>
+                        <h2>Flask & CRUD</h2>
+                        <p>Documentation approfondie avec tous les templates HTML complets.</p>
+                    </a>
+                </div>
+
+                <h2>Contenu du guide Flask (11 étapes)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Étape</th><th>Contenu</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1–2</td><td>Environnement, structure du projet</td></tr>
+                        <tr><td>3</td><td>Frontend manuel (HTML simple)</td></tr>
+                        <tr><td>4–5</td><td>Flask — routes, templates, données dynamiques</td></tr>
+                        <tr><td>6</td><td><strong>Modèle et base de données (SQLite)</strong></td></tr>
+                        <tr><td>7</td><td>Page de connexion et sessions</td></tr>
+                        <tr><td>8</td><td>CRUD utilisateurs avec modèle User</td></tr>
+                        <tr><td>9–11</td><td>Formulaires, tests et déploiement</td></tr>
+                    </tbody>
+                </table>
+
+                <h2>Comment ouvrir ce site</h2>
+                <p>Double-cliquez sur <strong>index.html</strong> dans le dossier <code>docs/</code>. Aucun serveur requis.</p>
+            </article>
+        </div>
+    </div>
+</body>
+</html>
