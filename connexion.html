@@ -3,37 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page de connexion — Flask</title>
+  <title>Page de connexion avec Flask — Flask</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="index.html" class="brand">
-          <span class="brand-icon">{ }</span>
-          <span class="brand-text"><strong>DOCS</strong><small>Connexion Flask</small></span>
-        </a>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="index.html" class="nav-item">
-          <span class="nav-badge">Start</span>
-          <span class="nav-item-text"><strong>Accueil</strong><small>Vue d'ensemble</small></span>
-        </a>
-        <a href="connexion.html" class="nav-item active">
-          <span class="nav-badge">6 étapes</span>
-          <span class="nav-item-text"><strong>Page de connexion</strong><small>HTML + Flask</small></span>
-        </a>
-      </nav>
-      <div class="sidebar-footer"><p>HTML · Flask</p></div>
-    </aside>
+  <div class="sidebar-header">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">{ }</span>
+      <span class="brand-text"><strong>DOCS</strong><small>Flask</small></span>
+    </a>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-badge">Start</span>
+      <span class="nav-item-text"><strong>Accueil</strong><small>Vue d'ensemble</small></span>
+    </a>
+    <a href="connexion.html" class="nav-item active">
+      <span class="nav-badge">5 étapes</span>
+      <span class="nav-item-text"><strong>Connexion</strong><small>Login / logout</small></span>
+    </a>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-badge">6 étapes</span>
+      <span class="nav-item-text"><strong>Tableau de bord</strong><small>Page protégée</small></span>
+    </a></nav>
+  <div class="sidebar-footer"><p>HTML · Flask</p></div>
+</aside>
     <div class="main">
       <header class="topbar">
-        <span class="topbar-badge">6 étapes</span>
+        <span class="topbar-badge">5 étapes</span>
         <h1 class="topbar-title">Page de connexion avec Flask</h1>
       </header>
       <article class="doc-content"><h1 class="page-hidden" id="page-de-connexion-avec-flask">Page de connexion avec Flask</h1>
 <p>Guide simple pour créer une <strong>page de connexion</strong> avec Flask (HTML sans CSS).</p>
+<blockquote>
+<p><strong>Suite :</strong> une fois la connexion en place, consultez <a href="dashboard.html">documentation-dashboard.md</a> pour le <strong>tableau de bord</strong>.</p>
+</blockquote>
 <hr>
 <h2 id="table-des-matières">Table des matières</h2>
 <ol>
@@ -42,17 +48,17 @@
 <li><a href="#%C3%A9tape-2--structure-du-projet">Étape 2 — Structure du projet</a></li>
 <li><a href="#%C3%A9tape-3--page-html-de-connexion">Étape 3 — Page HTML de connexion</a></li>
 <li><a href="#%C3%A9tape-4--code-flask-login--logout">Étape 4 — Code Flask (login / logout)</a></li>
-<li><a href="#%C3%A9tape-5--prot%C3%A9ger-une-page">Étape 5 — Protéger une page</a></li>
-<li><a href="#%C3%A9tape-6--tester">Étape 6 — Tester</a></li>
+<li><a href="#%C3%A9tape-5--tester-la-connexion">Étape 5 — Tester la connexion</a></li>
 </ol>
 <hr>
 <h2 id="1-vue-densemble">1. Vue d'ensemble</h2>
 <h3 id="objectif">Objectif</h3>
-<p>Créer une application avec :</p>
+<p>Créer la <strong>page de connexion</strong> avec :</p>
 <ul>
-<li>Une <strong>page de connexion</strong> (email + mot de passe)</li>
-<li>Une <strong>page protégée</strong> accessible seulement après connexion</li>
-<li>Une <strong>déconnexion</strong></li>
+<li>Formulaire email + mot de passe</li>
+<li>Vérification des identifiants</li>
+<li>Session utilisateur</li>
+<li>Déconnexion</li>
 </ul>
 <h3 id="fonctionnement">Fonctionnement</h3>
 <pre><code>1. L&#39;utilisateur ouvre /login
@@ -78,8 +84,7 @@ pip install flask
 ├── app.py
 ├── requirements.txt
 └── templates/
-    ├── login.html
-    └── dashboard.html
+    └── login.html
 </code></pre>
 <pre><code class="language-powershell">mkdir templates
 New-Item app.py, requirements.txt -ItemType File
@@ -148,13 +153,11 @@ New-Item app.py, requirements.txt -ItemType File
 <hr>
 <h2 id="étape-4--code-flask-login-logout">Étape 4 — Code Flask (login / logout)</h2>
 <p>Fichier <code>app.py</code> :</p>
-<pre><code class="language-python">from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+<pre><code class="language-python">from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
 app.secret_key = &quot;changez-cette-cle-en-production&quot;
 
-# Utilisateurs de test (en production : utiliser une base de données)
 USERS = {
     &quot;admin@example.com&quot;: {&quot;password&quot;: &quot;admin123&quot;, &quot;name&quot;: &quot;Administrateur&quot;},
 }
@@ -191,11 +194,14 @@ def logout():
 if __name__ == &quot;__main__&quot;:
     app.run(debug=True)
 </code></pre>
+<blockquote>
+<p>La route <code>/dashboard</code> sera ajoutée dans le <a href="dashboard.html">guide tableau de bord</a>.</p>
+</blockquote>
 <h3 id="explication-du-code">Explication du code</h3>
 <table>
 <thead>
 <tr>
-<th>Ligne / concept</th>
+<th>Concept</th>
 <th>Rôle</th>
 </tr>
 </thead>
@@ -217,44 +223,14 @@ if __name__ == &quot;__main__&quot;:
 </tr>
 <tr>
 <td><code>redirect(url_for(&quot;dashboard&quot;))</code></td>
-<td>Redirige vers une autre page</td>
+<td>Redirige après connexion réussie</td>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="étape-5--protéger-une-page">Étape 5 — Protéger une page</h2>
-<p>Page accessible <strong>uniquement si connecté</strong> — <code>templates/dashboard.html</code> :</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;fr&quot;&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;title&gt;Tableau de bord&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h1&gt;Bienvenue, {{ name }} !&lt;/h1&gt;
-    &lt;p&gt;&lt;a href=&quot;{{ url_for(&#39;logout&#39;) }}&quot;&gt;Déconnexion&lt;/a&gt;&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>Ajouter dans <code>app.py</code> :</p>
-<pre><code class="language-python">def login_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if &quot;user_email&quot; not in session:
-            flash(&quot;Veuillez vous connecter.&quot;)
-            return redirect(url_for(&quot;login&quot;))
-        return f(*args, **kwargs)
-    return wrapper
-
-@app.route(&quot;/dashboard&quot;)
-@login_required
-def dashboard():
-    return render_template(&quot;dashboard.html&quot;, name=session.get(&quot;user_name&quot;))
-</code></pre>
-<hr>
-<h2 id="étape-6--tester">Étape 6 — Tester</h2>
+<h2 id="étape-5--tester-la-connexion">Étape 5 — Tester la connexion</h2>
 <pre><code class="language-bash">python app.py
 </code></pre>
-<p>Ouvrir : <strong><a href="http://127.0.0.1:5000">http://127.0.0.1:5000</a></strong></p>
+<p>Ouvrir : <strong><a href="http://127.0.0.1:5000/login">http://127.0.0.1:5000/login</a></strong></p>
 <table>
 <thead>
 <tr>
@@ -266,7 +242,7 @@ def dashboard():
 <tbody><tr>
 <td>Connexion OK</td>
 <td><code>admin@example.com</code> / <code>admin123</code></td>
-<td>Redirection vers <code>/dashboard</code></td>
+<td>Redirection (dashboard à configurer ensuite)</td>
 </tr>
 <tr>
 <td>Connexion KO</td>
@@ -274,30 +250,25 @@ def dashboard():
 <td>Message d&#39;erreur sur <code>/login</code></td>
 </tr>
 <tr>
-<td>Accès <code>/dashboard</code> sans login</td>
-<td>—</td>
-<td>Redirection vers <code>/login</code></td>
-</tr>
-<tr>
 <td>Clic « Déconnexion »</td>
 <td>—</td>
 <td>Retour sur <code>/login</code></td>
 </tr>
 </tbody></table>
-<hr>
-<h2 id="récapitulatif">Récapitulatif</h2>
-<pre><code>GET  /login      → Affiche le formulaire
-POST /login      → Vérifie les identifiants
-GET  /dashboard  → Page protégée (connecté uniquement)
-GET  /logout     → Déconnexion
-</code></pre>
 <p><strong>Identifiants de test :</strong></p>
 <ul>
 <li>Email : <code>admin@example.com</code></li>
 <li>Mot de passe : <code>admin123</code></li>
 </ul>
 <hr>
-<p><em>Documentation simplifiée — page de connexion Flask uniquement.</em></p>
+<h2 id="récapitulatif">Récapitulatif</h2>
+<pre><code>GET  /login      → Affiche le formulaire
+POST /login      → Vérifie les identifiants
+GET  /logout     → Déconnexion
+</code></pre>
+<p><strong>Prochaine étape :</strong> <a href="dashboard.html">Tableau de bord</a></p>
+<hr>
+<p><em>Documentation — page de connexion Flask.</em></p>
 </article>
     </div>
   </div>

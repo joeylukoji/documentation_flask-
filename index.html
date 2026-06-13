@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil — Connexion Flask</title>
+    <title>Accueil — Documentation Flask</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
                     <span class="brand-icon">{ }</span>
                     <span class="brand-text">
                         <strong>DOCS</strong>
-                        <small>Connexion Flask</small>
+                        <small>Flask</small>
                     </span>
                 </a>
             </div>
@@ -27,10 +27,17 @@
                     </span>
                 </a>
                 <a href="connexion.html" class="nav-item">
+                    <span class="nav-badge">5 étapes</span>
+                    <span class="nav-item-text">
+                        <strong>Connexion</strong>
+                        <small>Login / logout</small>
+                    </span>
+                </a>
+                <a href="dashboard.html" class="nav-item">
                     <span class="nav-badge">6 étapes</span>
                     <span class="nav-item-text">
-                        <strong>Page de connexion</strong>
-                        <small>HTML + Flask</small>
+                        <strong>Tableau de bord</strong>
+                        <small>Page protégée</small>
                     </span>
                 </a>
             </nav>
@@ -42,34 +49,30 @@
         <div class="main">
             <header class="topbar">
                 <span class="topbar-badge">Start</span>
-                <h1 class="topbar-title">Page de connexion avec Flask</h1>
+                <h1 class="topbar-title">Documentation Flask — Connexion & Dashboard</h1>
             </header>
 
             <article class="doc-content">
-                <p>Guide simplifié pour créer une <strong>page de connexion</strong> avec Flask et HTML (sans CSS).</p>
+                <p>Deux guides complémentaires pour créer une application Flask avec HTML simple (sans CSS).</p>
 
                 <div class="cards">
                     <a href="connexion.html" class="card">
+                        <span class="card-badge">5 étapes</span>
+                        <h2>Page de connexion</h2>
+                        <p>Formulaire login, sessions, vérification des identifiants et déconnexion.</p>
+                    </a>
+                    <a href="dashboard.html" class="card">
                         <span class="card-badge">6 étapes</span>
-                        <h2>Guide complet</h2>
-                        <p>Installation, formulaire HTML, routes login/logout, sessions et page protégée.</p>
+                        <h2>Tableau de bord</h2>
+                        <p>Page protégée après connexion, décorateur login_required, affichage du profil.</p>
                     </a>
                 </div>
 
-                <h2>Contenu</h2>
-                <table>
-                    <thead>
-                        <tr><th>Étape</th><th>Sujet</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1</td><td>Installation Flask</td></tr>
-                        <tr><td>2</td><td>Structure du projet</td></tr>
-                        <tr><td>3</td><td>Page HTML de connexion</td></tr>
-                        <tr><td>4</td><td>Code Flask (login / logout)</td></tr>
-                        <tr><td>5</td><td>Protéger une page (dashboard)</td></tr>
-                        <tr><td>6</td><td>Tester</td></tr>
-                    </tbody>
-                </table>
+                <h2>Ordre recommandé</h2>
+                <ol>
+                    <li>Commencer par la <a href="connexion.html">page de connexion</a></li>
+                    <li>Puis ajouter le <a href="dashboard.html">tableau de bord</a></li>
+                </ol>
 
                 <h2>Identifiants de test</h2>
                 <table>
