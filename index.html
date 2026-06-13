@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil — Documentation Web & Flask</title>
+    <title>Accueil — Connexion Flask</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,11 +14,10 @@
                     <span class="brand-icon">{ }</span>
                     <span class="brand-text">
                         <strong>DOCS</strong>
-                        <small>Web & Flask</small>
+                        <small>Connexion Flask</small>
                     </span>
                 </a>
             </div>
-            <p class="nav-label">Guides</p>
             <nav class="sidebar-nav">
                 <a href="index.html" class="nav-item active">
                     <span class="nav-badge">Start</span>
@@ -27,18 +26,11 @@
                         <small>Vue d'ensemble</small>
                     </span>
                 </a>
-                <a href="guide-web.html" class="nav-item">
-                    <span class="nav-badge">11 étapes</span>
+                <a href="connexion.html" class="nav-item">
+                    <span class="nav-badge">6 étapes</span>
                     <span class="nav-item-text">
-                        <strong>Guide Flask</strong>
-                        <small>Modèle, CRUD, formulaires</small>
-                    </span>
-                </a>
-                <a href="flask.html" class="nav-item">
-                    <span class="nav-badge">Détail</span>
-                    <span class="nav-item-text">
-                        <strong>Flask & CRUD</strong>
-                        <small>Templates complets</small>
+                        <strong>Page de connexion</strong>
+                        <small>HTML + Flask</small>
                     </span>
                 </a>
             </nav>
@@ -50,45 +42,40 @@
         <div class="main">
             <header class="topbar">
                 <span class="topbar-badge">Start</span>
-                <h1 class="topbar-title">Documentation — Développement Web & Flask</h1>
+                <h1 class="topbar-title">Page de connexion avec Flask</h1>
             </header>
 
             <article class="doc-content">
-                <p>Bienvenue ! Ce site contient deux guides pour apprendre à créer des applications web avec <strong>Flask</strong>.</p>
-
-                <h2>Guides disponibles</h2>
+                <p>Guide simplifié pour créer une <strong>page de connexion</strong> avec Flask et HTML (sans CSS).</p>
 
                 <div class="cards">
-                    <a href="guide-web.html" class="card">
-                        <span class="card-badge">11 étapes</span>
-                        <h2>Guide Flask</h2>
-                        <p>Modèle de base de données SQLite, connexion, CRUD utilisateurs et formulaires.</p>
-                    </a>
-                    <a href="flask.html" class="card">
-                        <span class="card-badge">Détail</span>
-                        <h2>Flask & CRUD</h2>
-                        <p>Documentation approfondie avec tous les templates HTML complets.</p>
+                    <a href="connexion.html" class="card">
+                        <span class="card-badge">6 étapes</span>
+                        <h2>Guide complet</h2>
+                        <p>Installation, formulaire HTML, routes login/logout, sessions et page protégée.</p>
                     </a>
                 </div>
 
-                <h2>Contenu du guide Flask (11 étapes)</h2>
+                <h2>Contenu</h2>
                 <table>
                     <thead>
-                        <tr><th>Étape</th><th>Contenu</th></tr>
+                        <tr><th>Étape</th><th>Sujet</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>1–2</td><td>Environnement, structure du projet</td></tr>
-                        <tr><td>3</td><td>Frontend manuel (HTML simple)</td></tr>
-                        <tr><td>4–5</td><td>Flask — routes, templates, données dynamiques</td></tr>
-                        <tr><td>6</td><td><strong>Modèle et base de données (SQLite)</strong></td></tr>
-                        <tr><td>7</td><td>Page de connexion et sessions</td></tr>
-                        <tr><td>8</td><td>CRUD utilisateurs avec modèle User</td></tr>
-                        <tr><td>9–11</td><td>Formulaires, tests et déploiement</td></tr>
+                        <tr><td>1</td><td>Installation Flask</td></tr>
+                        <tr><td>2</td><td>Structure du projet</td></tr>
+                        <tr><td>3</td><td>Page HTML de connexion</td></tr>
+                        <tr><td>4</td><td>Code Flask (login / logout)</td></tr>
+                        <tr><td>5</td><td>Protéger une page (dashboard)</td></tr>
+                        <tr><td>6</td><td>Tester</td></tr>
                     </tbody>
                 </table>
 
-                <h2>Comment ouvrir ce site</h2>
-                <p>Double-cliquez sur <strong>index.html</strong> dans le dossier <code>docs/</code>. Aucun serveur requis.</p>
+                <h2>Identifiants de test</h2>
+                <table>
+                    <tr><th>Email</th><td><code>admin@example.com</code></td></tr>
+                    <tr><th>Mot de passe</th><td><code>admin123</code></td></tr>
+                </table>
             </article>
         </div>
     </div>
